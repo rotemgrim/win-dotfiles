@@ -1,0 +1,269 @@
+" Plugins
+set surround
+set highlightedyank
+set NERDTree
+set multiple-cursors
+" set commentary
+set easymotion
+set vim-paragraph-motion
+set textobj-indent
+set textobj-entire
+set argtextobj
+set ReplaceWithRegister
+set exchange
+set clipboard=unnamed
+
+" Plugins Settings
+let g:highlightedyank_highlight_duration = "80"
+let g:highlightedyank_highlight_color = "rgba(57, 197, 187, 155)"
+
+" which-key theme
+let g:WhichKey_ShowVimActions = "false"
+let g:WhichKey_FontFamily = 'MonoLisa-bold, FiraCode Nerd Font Mono'
+let g:WhichKey_FontSize = 16
+let g:WhichKey_KeyStyle = "bold"
+let g:WhichKey_KeyColor = "white"
+let g:WhichKey_PrefixStyle = "bold"
+let g:WhichKey_PrefixColor = "#2acaea"
+let g:WhichKey_CommandStyle = "italic"
+let g:WhichKey_CommandColor = "#85CC18"
+let g:WhichKey_Divider = " "
+
+set charset=utf-8
+set encoding=utf-8
+
+" Vim Settings
+set scrolloff=5
+set history=1000
+set showmode
+set incsearch
+set tabstop=4
+set shiftwidth=4
+set softtabstop=4
+set expandtab
+set smartindent
+set autoindent
+set hlsearch
+set ignorecase
+set smartcase
+
+" Idea Settings
+set ideajoin
+set ideamarks
+
+map <space> <nop>
+
+let mapleader="\<space>"
+nmap f :action AceAction<CR>
+nmap <esc> :noh<CR>
+
+
+" ================================================================================================
+" 👻👻👻 Which-Key 👻👻👻
+" ================================================================================================
+set which-key
+set notimeout
+
+" Leader
+
+" [b]uffer
+let g:WhichKeyDesc_buffers = "<leader>b Buffers"
+map <leader>bp <Action>(ToggleLineBreakpoint)
+map <leader>bd <Action>(CloseEditor)
+map <leader>ba <Action>(CloseAllEditors)
+map <leader>bo <Action>(CloseAllEditorsButActive)
+map <leader>br <Action>(RecentFiles)
+
+let g:WhichKeyDesc_code1 = "<leader>c Code"
+" let g:WhichKeyDesc_code2 = "<Space>c Code"
+map <leader>cc <Action>(CommentByLineComment)
+map <leader>cu <Action>(CommentByBlockComment)
+map <leader>ca <Action>(ShowIntentionActions)
+
+" [r]
+map <leader>rr <Action>(Run)
+map <leader>rc <Action>(ChooseRunConfiguration)
+map <leader>rd <Action>(Debug)
+map <leader>rt <Action>(RunTests)
+map <leader>rs <Action>(Stop)
+map <leader>rn <Action>(RenameElement)
+map <leader>re <Action>(Refactorings.QuickListPopupAction)
+map <leader>rf <Action>(RecentFiles)
+map <leader>rl <Action>(RecentLocations)
+map <leader>rp <Action>(ManageRecentProjects)
+
+map <leader>a <Action>(GotoAction)
+map <leader>e <Action>(ActivateProjectToolWindow)
+map <leader>v <Action>(Vcs.QuickListPopupAction)
+map <leader>fu <Action>(FindUsages)
+map <leader>fs <Action>(FileStructurePopup)
+map <leader>uw <Action>(Unwrap)
+map <leader>sw <Action>(SurroundWith)
+map <leader>sd <Action>(SafeDelete)
+map <leader>su <Action>(ShowUsages)
+map <leader>sf <Action>(ShowFilePath)
+map <leader>si <Action>(SelectIn)
+" map <leader>sh <Action>(MoveTabLeft)
+" map <leader>sj <Action>(MoveTabDown)
+" map <leader>sk <Action>(MoveTabUp)
+" map <leader>sl <Action>(MoveTabRight)
+" map <leader>lm <Action>(leetcode.NavigatorActionsMenu)
+" map <leader>lt <Action>(leetcode.NavigatorActionsToolbar)
+" map <leader>ll <Action>(leetcode.editor.group)
+map <leader>hl <Action>(HighlightUsagesInFile)
+map <leader>qf <Action>(ShowIntentionActions)
+map <leader>qp <Action>(QuickPreview)
+map <leader>qd <Action>(QuickDefinition)
+map <leader>qD <Action>(QuickTypeDefinition)
+map <leader>g <Action>(ShowErrorDescription)
+map <leader>of <Action>(OpenFile)
+" map <leader>oi <Action>(OptimizeImports)
+map <leader>om <Action>(OverrideMethods)
+map <leader>im <Action>(ImplementMethods)
+map <leader>mj <Action>(MoveStatementDown)
+map <leader>mk <Action>(MoveStatementUp)
+map <leader>z <Action>(ToggleZenMode)
+
+
+
+
+" Shortcut for escape
+imap jj <Esc>
+imap jk <Esc>
+
+" []
+let g:WhichKeyDesc_prev = "[ Previous"
+let g:WhichKeyDesc_next = "] Next"
+nmap [g <Action>(GotoPreviousError)
+nmap ]g <Action>(GotoNextError)
+nmap [b <Action>(PreviousTab)
+nmap ]b <Action>(NextTab)
+nmap [u <Action>(GotoPrevElementUnderCaretUsage)
+nmap ]u <Action>(GotoNextElementUnderCaretUsage)
+nmap [o <Action>(PreviousOccurence)
+nmap ]o <Action>(NextOccurence)
+nmap [m <Action>(MethodUp)
+nmap ]m <Action>(MethodDown)
+nmap [c <Action>(JumpToLastChange)
+nmap ]c <Action>(JumpToNextChange)
+
+" Go [g]
+let g:WhichKeyDesc_goto = "g GoTo"
+map ga <Action>(GotoAction)
+map gm <Action>(GotoSuperMethod)
+map gc <Action>(GotoClass)
+map gf <Action>(GotoFile)
+map gt <Action>(GotoTest)
+map gd <Action>(GotoDeclaration)
+map gD <Action>(GotoTypeDeclaration)
+map gi <Action>(GotoImplementation)
+map gI <Action>(QuickImplementations)
+map gs <Action>(GotoSymbol)
+" last changed in current buffer(file)
+nmap gl <action>(JumpToLastChange)
+" nmap gr <action>(RecentFile)
+map <leader>, <action>(RecentFiles)
+map <leader>/ <action>(FindInPath)
+" map <leader>space (FindInPath)
+
+nmap ge <action>(GotoNextError)
+nmap gp <action>(MethodUp)
+nmap gn <action>(MethodDown)
+
+nmap H <action>(Back)
+nmap L <action>(Forward)
+nmap K <action>(NextTab)
+nmap J <action>(PreviousTab)
+
+" g: Git ⭐️
+let g:WhichKeyDesc_Git = "<leader>g Git"
+nmap <leader>gg <action>(ActivateCommitToolWindow)
+nmap <leader>ga <action>(Annotate)
+nmap <leader>gc <action>(Git.Clone)
+
+nmap mc <action>(CopyReference)
+nmap md <action>(ToggleLineBreakpoint)
+
+" Backslash
+nmap \\g <Action>(Generate)
+nmap \\fc <Action>(ReformatCode)
+nmap \\fp <Action>(FindInPath)
+nmap \\o <Action>(SelectAllOccurrences)
+
+nmap \\hc <Action>(CallHierarchy)
+nmap \\hm <Action>(MethodHierarchy)
+nmap \\ht <Action>(TypeHierarchy)
+
+nmap \\tt <Action>($ShowTranslationDialogAction)
+nmap \\ts <Action>($TranslateTextComponent)
+nmap \\ti <Action>($InclusiveTranslateAction)
+nmap \\te <Action>($ExclusiveTranslateAction)
+
+" Ctrl
+map <C-a> ggVG"+y
+map <C-l> :noh<CR>
+nmap <C-n> <Action>(NewFile)
+nmap <C-k> <Action>(NewDir)
+
+
+
+" ================================================================================================
+" = No Leader Keymaps =====================================
+" ================================================================================================
+
+" i: Insert ⭐️
+" let g:WhichKeyDesc_InsertAfterBrackets = "<leader>i InsertAfterBrackets";
+" nmap <leader>i f(a
+" f : find
+" let f:WhichKeyDesc_FindEverything= "<leader>f FindInPath";
+" nmap <leader>ff <action>(FindInPath)
+
+" j: add Semicolon and goto nextline⭐️
+" let g:WhichKeyDesc_InsertSemicolon = "<leader>j InsertSemicolon"
+" nmap <leader>j A;<ESC>o
+
+" e: Toggle Explorer ⭐️
+"let g:WhichKeyDesc_ToggleExplorerOrExtract = "<leader>e ToggleExplorer"
+"nmap <leader>e <action>(ActivateProjectToolWindow)
+" e: Extract
+" extract method/function
+vmap <leader>em <action>(ExtractMethod)
+" extract constant
+vmap <leader>ec <action>(IntroduceConstant)
+" extract field
+vmap <leader>ef <action>(IntroduceField)
+" extract variable
+vmap <leader>ev <action>(IntroduceVariable)
+" Reformat the current line only
+
+
+" s: Show ⭐️
+let g:WhichKeyDesc_Show = "<leader>s Show"
+let g:WhichKeyDesc_Show_FileStructure = "<leader>ss ShowFileStructure"
+nmap <leader>ss <action>(FileStructurePopup)
+let g:WhichKeyDesc_Show_Bookmarks = "<leader>sb ShowBookmarks"
+nmap <leader>sb <action>(ShowBookmarks)
+let g:WhichKeyDesc_Show_ParameterInfo = "<leader>sb ShowParameterInfo"
+nmap <leader>sp <action>(ParameterInfo)
+" let g:WchKeyDesc_Show_select = "<leader>sv SelectInProjectView"
+" nmap <leader>sv <action>(SelectInProjectView)
+" let g:WchKeyDesc_Show_reformatCode= "<leader>sc ReformatCode"
+" vmap <leader>sc V<Action>(ReformatCode)
+
+" w: Window ⭐
+let g:WhichKeyDesc_Windows = "<leader>w Window+"
+nmap <leader>wo <Action>(UnsplitAll)
+nmap <leader>wl <Action>(SplitVertically)
+nmap <leader>wc <c-w>c
+
+" nnoremap <Leader>o :<C-u>action RecentProjectListGroup<CR>
+" nnoremap <Leader>d :<C-u>action ChooseDebugConfiguration<CR>
+" nnoremap <Leader>wa :<C-u>action CloseAllEditorsButActive<CR>
+
+
+
+" nmap <leader>wc <c-w>c
+" imap <c-h> <Left>
+" imap <c-l> <Right>
+" imap <c-j> <Down>
+" imap <c-k> <Up>
