@@ -2,6 +2,14 @@
 # requires: choco, winget, nodejs and git
 # you can copy paste into terminal (powershell)
 
+# Check for administrative privileges
+if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator"))
+{
+    # Re-run the script with elevated privileges
+    Start-Process powershell -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs
+    exit
+}
+
 
 # Install Chocolatey if it's not already installed
 if (-Not (Get-Command choco -ErrorAction SilentlyContinue)) {
