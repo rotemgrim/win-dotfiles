@@ -1,0 +1,8 @@
+[user]
+	name = rotem
+	email = rotemgrim@gmail.com
+[core]
+	autocrlf = input
+	eol = lf
+[safe]
+	directory = C:/Users/rotem/.local/share/chezmoi
