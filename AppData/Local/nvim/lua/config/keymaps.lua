@@ -10,3 +10,5 @@ map("n", "<c-/>", "<cmd>normal gcc<cr>j", { desc = "Comment line" })
 map("n", "<c-_>", "<cmd>normal gcc<cr>j", { desc = "Comment line" })
 map("v", "<c-/>", "<cmd>normal gcc<cr>", { desc = "Comment Block" })
 map("v", "<c-_>", "<cmd>normal gcc<cr>", { desc = "Comment Block" })
+
+vim.api.nvim_set_keymap("n", "<C-q>", "<C-v>", { noremap = true })
