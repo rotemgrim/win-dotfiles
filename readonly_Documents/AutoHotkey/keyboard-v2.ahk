@@ -1,36 +1,47 @@
 #Requires AutoHotkey >=2.0
 
+F5::Reload
+
+; list of key codes: https://kbdlayout.info/kbdusx/virtualkeys
+
 #HotIf !ModifierPressed()
 
 CapsLock::Return
 CapsLock & j::sendKeyWithModifiers("Left")
-CapsLock & k::sendKeyWithModifiers("Down")   
+CapsLock & k::sendKeyWithModifiers("Down")
 CapsLock & l::sendKeyWithModifiers("Right")
 CapsLock & i::sendKeyWithModifiers("Up")
 CapsLock & h::sendKeyWithModifiers("Home")
 CapsLock & o::sendKeyWithModifiers("End")
 CapsLock & Backspace::sendKeyWithModifiers("Delete")
 
-. & t::tryActivate("WindowsTerminal.exe") 
-. & d::tryActivate("phpstorm64.exe")
-. & g::tryActivate("goland64.exe")
-. & s::tryActivate("slack.exe")
-. & c::tryActivate("chrome.exe")
-. & e::tryActivate("msedge.exe")
-. & v::tryActivate("code.exe")
-. & z::tryActivate("Zoom.exe")
-. & f::tryActivate("s CabinetWClass ahk_exe explorer.exe")
-. & b::Send("^b") ; use to enter tmux mod
-. & a::Send("^+a") ; use to search tabs in browser
+ih := InputHook('I')
+ih.OnChar := ih_Char
+SC034::{
+  Global pressed := A_TickCount
+  ih.Start(), KeyWait(ThisHotkey)
+}
 
-.::{
-    ErrorLevel := !KeyWait(".", "T0.08")
-    if (ErrorLevel) {
-        ErrorLevel := !KeyWait(".")
-    } else {
-        SendInput("{.}")
-    }
-    return
+SC034 Up:: {
+  ih.Stop
+  If (ih.Input = '' && A_TickCount - pressed < 120)
+    Send '.'
+}
+
+ih_Char(ih, char) {
+  Switch char {
+    Case 't': tryActivate("WindowsTerminal.exe") 
+    Case 'd': tryActivate("phpstorm64.exe")
+    Case 'g': tryActivate("goland64.exe")
+    Case 's': tryActivate("slack.exe")
+    Case 'c': tryActivate("chrome.exe")
+    Case 'e': tryActivate("msedge.exe")
+    Case 'v': tryActivate("code.exe")
+    Case 'z': tryActivate("Zoom.exe")
+    Case 'f': tryActivate("s CabinetWClass ahk_exe explorer.exe")
+    Case 'b': Send("^b") ; use to enter tmux mod
+    Case 'a': Send("^+a") ; use to search tabs in browser
+ }
 }
 
 $Escape::{
