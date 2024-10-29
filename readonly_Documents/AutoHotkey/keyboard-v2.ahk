@@ -1,155 +1,159 @@
 #Requires AutoHotkey >=2.0
 
-F5::Reload
+f5::reload
 
 ; list of key codes: https://kbdlayout.info/kbdusx/virtualkeys
 
-#HotIf !ModifierPressed()
+#hotif !modifierpressed()
 
-CapsLock::Return
-CapsLock & j::sendKeyWithModifiers("Left")
-CapsLock & k::sendKeyWithModifiers("Down")
-CapsLock & l::sendKeyWithModifiers("Right")
-CapsLock & i::sendKeyWithModifiers("Up")
-CapsLock & h::sendKeyWithModifiers("Home")
-CapsLock & o::sendKeyWithModifiers("End")
-CapsLock & Backspace::sendKeyWithModifiers("Delete")
+capslock::return
+capslock & j::sendkeywithmodifiers("left")
+capslock & k::sendkeywithmodifiers("down")
+capslock & l::sendkeywithmodifiers("right")
+capslock & i::sendkeywithmodifiers("up")
+capslock & h::sendkeywithmodifiers("home")
+capslock & o::sendkeywithmodifiers("end")
+capslock & backspace::sendkeywithmodifiers("delete")
 
-ih := InputHook('I')
-ih.OnChar := ih_Char
+
+ih := InputHook("I")
+ih.KeyOpt("{All}", "+N") ; Enable notification for all keys
+ih.OnKeyDown := onkeydown
+
 SC034::{
-  Global pressed := A_TickCount
-  ih.Start(), KeyWait(ThisHotkey)
+    global pressed := A_TickCount
+    ih.Start()
+    KeyWait(A_ThisHotkey)
 }
 
-SC034 Up:: {
-  ih.Stop
-  If (ih.Input = '' && A_TickCount - pressed < 120)
-    Send '.'
+SC034 Up::{
+    ih.Stop()
+    if (ih.Input = "" and A_TickCount - pressed < 120)
+        Send(".")
 }
 
-ih_Char(ih, char) {
-  Switch char {
-    Case 't': tryActivate("WindowsTerminal.exe") 
-    Case 'd': tryActivate("phpstorm64.exe")
-    Case 'g': tryActivate("goland64.exe")
-    Case 's': tryActivate("slack.exe")
-    Case 'c': tryActivate("chrome.exe")
-    Case 'e': tryActivate("msedge.exe")
-    Case 'v': tryActivate("code.exe")
-    Case 'z': tryActivate("Zoom.exe")
-    Case 'f': tryActivate("s CabinetWClass ahk_exe explorer.exe")
-    Case 'b': Send("^b") ; use to enter tmux mod
-    Case 'a': Send("^+a") ; use to search tabs in browser
- }
+onkeydown(ih, vk, sc) {
+    Switch sc {
+      Case "20": tryActivate("WindowsTerminal.exe")  ; 'T' key
+      Case "32": tryActivate("phpstorm64.exe")       ; 'D' key
+      Case "34": tryActivate("goland64.exe")         ; 'G' key
+      Case "31": tryActivate("slack.exe")            ; 'S' key
+      Case "46": tryActivate("chrome.exe")           ; 'C' key
+      Case "18": tryActivate("msedge.exe")           ; 'E' key
+      Case "47": tryActivate("code.exe")             ; 'V' key
+      Case "44": tryActivate("Zoom.exe")             ; 'Z' key
+      Case "33": tryActivate("s CabinetWClass ahk_exe explorer.exe")  ; 'F' key
+      Case "48": Send("^b")                          ; 'B' key
+      Case "30": Send("^+a")                         ; 'A' key
+  }
 }
 
-$Escape::{
-    ErrorLevel := !KeyWait("Escape", "T0.5")
-    if (ErrorLevel) {
-        ErrorLevel := !KeyWait("Escape")
-        PostMessage(0x112, 0xF060, , , "A")
+$escape::{
+    errorlevel := !keywait("escape", "t0.5")
+    if (errorlevel) {
+        errorlevel := !keywait("escape")
+        postmessage(0x112, 0xf060, , , "a")
     } else {
-        SendInput("{Escape}")
+        sendinput("{escape}")
     }
     return
 }
 
-#HotIf
+#hotif
 
-#HotIf WinActive("ahk_exe chrome.exe") and !ModifierPressed()
-z & h::CheckDevTools("off")
-z & l::CheckDevTools("on")
+#hotif winactive("ahk_exe chrome.exe") and !modifierpressed()
+z & h::checkdevtools("off")
+z & l::checkdevtools("on")
 z::{
-    ErrorLevel := !KeyWait("z", "T0.08")
-    if (ErrorLevel) {
-        ErrorLevel := !KeyWait("z")
+    errorlevel := !keywait("z", "t0.08")
+    if (errorlevel) {
+        errorlevel := !keywait("z")
     } else {
-        SendInput("{z}")
+        sendinput("{z}")
     }
     return
 }
-#HotIf
+#hotif
 
 ; $<+`;::return
 $`;::{
-    ErrorLevel := !KeyWait("`;", "T0.12")
-    if (ErrorLevel) {
-        Send("{Ctrl down}")
-        ErrorLevel := !KeyWait("`;")
-        Send("{Ctrl up}")
+    errorlevel := !keywait("`;", "t0.12")
+    if (errorlevel) {
+        send("{ctrl down}")
+        errorlevel := !keywait("`;")
+        send("{ctrl up}")
     } else {
-        Send("{vkBA}")
+        send("{vkba}")
     }
     return
 }
 
 ; $<+'::return
 $'::{
-    ErrorLevel := !KeyWait("`'", "T0.12")
-    if (ErrorLevel) {
-        Send("{Alt down}")
-        ErrorLevel := !KeyWait("`'")
-        Send("{Alt up}")
+    errorlevel := !keywait("`'", "t0.12")
+    if (errorlevel) {
+        send("{alt down}")
+        errorlevel := !keywait("`'")
+        send("{alt up}")
     } else {
-        Send("{vkDE}")
+        send("{vkde}")
     }
     return
 }
 
-sendKeyWithModifiers(key) {
+sendkeywithmodifiers(key) {
     modifiers := ""
-    if GetKeyState("Shift")
+    if getkeystate("shift")
         modifiers .= "+"
-    if GetKeyState("Ctrl")
+    if getkeystate("ctrl")
         modifiers .= "^"
-    if GetKeyState("Alt")
+    if getkeystate("alt")
         modifiers .= "!"
-    if GetKeyState("LWin") or GetKeyState("RWin")
+    if getkeystate("lwin") or getkeystate("rwin")
         modifiers .= "#"
-    Send(modifiers . "{" . key . "}")
+    send(modifiers . "{" . key . "}")
     return
 }
 
-tryActivate(search) {
-    if WinExist("ahk_exe " . search) 
-        if WinActive("ahk_exe " . search) {
-            groupName := StrReplace("winGropup" . search, ".", "")
-            groupName := StrReplace(groupName, " ", "")
-            GroupAdd(groupName, "ahk_exe " . search) ; Add only Internet Explorer windows to this group.
-            GroupActivate(groupName)
+tryactivate(search) {
+    if winexist("ahk_exe " . search) 
+        if winactive("ahk_exe " . search) {
+            groupname := strreplace("wingropup" . search, ".", "")
+            groupname := strreplace(groupname, " ", "")
+            groupadd(groupname, "ahk_exe " . search) ; add only internet explorer windows to this group.
+            groupactivate(groupname)
         } else {
-            WinActivate
+            winactivate
         }
     else 
-        Send("{LWin}")
+        send("{lwin}")
     return
 }
 
-ModifierPressed() {
-	Return GetKeyState("Ctrl")
-	    || GetKeyState("Alt")
-	    || GetKeyState("Shift")
+modifierpressed() {
+	return getkeystate("ctrl")
+	    || getkeystate("alt")
+	    || getkeystate("shift")
 }
 
-CheckDevTools(state) {
+checkdevtools(state) {
 
-    If WinActive("ahk_exe chrome.exe") {
+    if winactive("ahk_exe chrome.exe") {
         if (state == "on") {
-            Send("+{F6}")  ; Sends Shift + F6
-            Sleep(10)     ; Waits for 100 milliseconds
-            Send("^l")     ; Sends Ctrl + L
-            Sleep(10)     ; Waits for 100 milliseconds
-            Send("+{F6}")  ; Sends Shift + F6
+            send("+{f6}")  ; sends shift + f6
+            sleep(10)     ; waits for 100 milliseconds
+            send("^l")     ; sends ctrl + l
+            sleep(10)     ; waits for 100 milliseconds
+            send("+{f6}")  ; sends shift + f6
         } 
         if (state == "off") {
-            Send("+{F6}")  ; Sends Shift + F6
-            Sleep(10)     ; Waits for 100 milliseconds
-            Send("^l")     ; Sends Ctrl + L
-            Sleep(10)     ; Waits for 100 milliseconds
-            Send("+{F6}")  ; Sends Shift + F6
-            Sleep(10)     ; Waits for 100 milliseconds
-            Send("+{F6}")  ; Sends Shift + F6
+            send("+{f6}")  ; sends shift + f6
+            sleep(10)     ; waits for 100 milliseconds
+            send("^l")     ; sends ctrl + l
+            sleep(10)     ; waits for 100 milliseconds
+            send("+{f6}")  ; sends shift + f6
+            sleep(10)     ; waits for 100 milliseconds
+            send("+{f6}")  ; sends shift + f6
         }        
     }
 
