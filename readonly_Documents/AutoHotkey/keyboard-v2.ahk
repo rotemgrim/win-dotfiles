@@ -6,33 +6,45 @@ f5::reload
 
 #hotif !modifierpressed()
 
-capslock::return
-capslock & j::sendkeywithmodifiers("left")
-capslock & k::sendkeywithmodifiers("down")
-capslock & l::sendkeywithmodifiers("right")
-capslock & i::sendkeywithmodifiers("up")
-capslock & h::sendkeywithmodifiers("home")
-capslock & o::sendkeywithmodifiers("end")
-capslock & backspace::sendkeywithmodifiers("delete")
-
-
-ih := InputHook("I")
-ih.KeyOpt("{All}", "+N") ; Enable notification for all keys
-ih.OnKeyDown := onkeydown
-
-SC034::{
-    global pressed := A_TickCount
-    ih.Start()
+ihCapsLock := InputHook("I")
+ihCapsLock.KeyOpt("{All}", "+N") ; Enable notification for all keys
+ihCapsLock.OnKeyDown := onkeydownCapsLock
+SC03A::{ ; listen for caps lock key
+    global pressedCL := A_TickCount
+    ihCapsLock.Start()
     KeyWait(A_ThisHotkey)
 }
-
-SC034 Up::{
-    ih.Stop()
-    if (ih.Input = "" and A_TickCount - pressed < 120)
-        Send(".")
+SC03A Up::{
+    ihCapsLock.Stop()
+    if (ihCapsLock.Input = "" and A_TickCount - pressedCL < 120)
+        Send("{SC03A}")
+}
+onkeydownCapsLock(ihCapsLock, vk, sc) {
+    Switch sc {
+        Case "36": sendkeywithmodifiers("left")
+        Case "37": sendkeywithmodifiers("down")
+        Case "38": sendkeywithmodifiers("right")
+        Case "23": sendkeywithmodifiers("up")
+        Case "35": sendkeywithmodifiers("home")
+        Case "24": sendkeywithmodifiers("end")
+        Case "14": sendkeywithmodifiers("delete")
+    }
 }
 
-onkeydown(ih, vk, sc) {
+ihDot := InputHook("I")
+ihDot.KeyOpt("{All}", "+N") ; Enable notification for all keys
+ihDot.OnKeyDown := onkeydownDot
+SC034::{ ; listen for period key "."
+    global pressedDot := A_TickCount
+    ihDot.Start()
+    KeyWait(A_ThisHotkey)
+}
+SC034 Up::{
+    ihDot.Stop()
+    if (ihDot.Input = "" and A_TickCount - pressedDot < 120)
+        Send("{SC034}")
+}
+onkeydownDot(ihDot, vk, sc) {
     Switch sc {
       Case "20": tryActivate("WindowsTerminal.exe")  ; 'T' key
       Case "32": tryActivate("phpstorm64.exe")       ; 'D' key
@@ -48,9 +60,38 @@ onkeydown(ih, vk, sc) {
   }
 }
 
+
+ihX := InputHook("I")
+ihX.KeyOpt("{All}", "+N") ; Enable notification for all keys
+ihX.OnKeyDown := onkeydownX
+SC02D::{ ; listen for period key "."
+    global pressedX := A_TickCount
+    ihX.Start()
+    KeyWait(A_ThisHotkey)
+}
+SC02D Up::{
+    ihX.Stop()
+    if (ihX.Input = "" and A_TickCount - pressedX < 120)
+        Send("{SC02D}")
+}
+onkeydownX(ihX, vk, sc) {
+  if (winactive("ahk_exe chrome.exe")) {
+    Switch sc {
+      Case "35": checkdevtools("off") ; 'h' key
+      Case "38": checkdevtools("on")  ; 'l' key
+    }
+  }
+  Switch sc {
+    Case "20": tryActivate("WindowsTerminal.exe")  ; 'T' key
+    Case "32": tryActivate("phpstorm64.exe")       ; 'D' key
+  }
+  
+}
+
 $escape::{
     errorlevel := !keywait("escape", "t0.5")
     if (errorlevel) {
+        soundbeep 440, 100
         errorlevel := !keywait("escape")
         postmessage(0x112, 0xf060, , , "a")
     } else {
@@ -61,44 +102,40 @@ $escape::{
 
 #hotif
 
-#hotif winactive("ahk_exe chrome.exe") and !modifierpressed()
-z & h::checkdevtools("off")
-z & l::checkdevtools("on")
-z::{
-    errorlevel := !keywait("z", "t0.08")
-    if (errorlevel) {
-        errorlevel := !keywait("z")
-    } else {
-        sendinput("{z}")
+; use long pressed ";" as a ctrl modifier key
+ihCtrl := InputHook("T0.12") ; 120 ms
+SC027:: {
+    pressed := A_TickCount
+    ihCtrl.Start()
+    ihCtrl.Wait()
+    switch ihCtrl.EndReason {
+      case "Stopped": Send("{SC027}")
+      case "Timeout": 
+        Send("{Ctrl down}")
     }
-    return
 }
-#hotif
-
-; $<+`;::return
-$`;::{
-    errorlevel := !keywait("`;", "t0.12")
-    if (errorlevel) {
-        send("{ctrl down}")
-        errorlevel := !keywait("`;")
-        send("{ctrl up}")
-    } else {
-        send("{vkba}")
-    }
-    return
+SC027 Up::{
+  if (ihCtrl.EndReason = "Timeout")
+    Send("{Ctrl up}")
+  ihCtrl.Stop()
 }
 
-; $<+'::return
-$'::{
-    errorlevel := !keywait("`'", "t0.12")
-    if (errorlevel) {
-        send("{alt down}")
-        errorlevel := !keywait("`'")
-        send("{alt up}")
-    } else {
-        send("{vkde}")
+; use long pressed "'" as a alt modifier key 
+ihAlt := InputHook("T0.12") ; 120 ms
+SC028:: {
+    pressed := A_TickCount
+    ihAlt.Start()
+    ihAlt.Wait()
+    switch ihAlt.EndReason {
+      case "Stopped": Send("{SC028}")
+      case "Timeout": 
+        Send("{Alt down}")
     }
-    return
+}
+SC028 Up::{
+  if (ihAlt.EndReason = "Timeout")
+    Send("{Alt up}")
+  ihAlt.Stop()
 }
 
 sendkeywithmodifiers(key) {
