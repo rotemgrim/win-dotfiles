@@ -12,6 +12,9 @@ autoload -Uz compinit
 compinit
 # End of lines added by compinstall
 
+bindkey  "^[[H"   beginning-of-line
+bindkey  "^[[F"   end-of-line
+bindkey  "^[[3~"  delete-char
 
 source ~/antigen.zsh
 
