@@ -1,5 +1,9 @@
 # aliases
-alias ll='eza -lh'
-alias la='eza -la'
+# alias ll='eza -lh'
+# alias la='eza -la'
 
-eval "$(starship init bash)"
+# eval "$(starship init bash)"
+
+if [ -t 1 ]; then
+  exec zsh
+fi
