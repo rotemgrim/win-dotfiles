@@ -28,7 +28,7 @@ winget install Neovim.Neovim
 # Install Lazygit using Winget
 winget install jesseduffield.lazygit
 
-winget install eza-community.eza starship
+winget install eza-community.eza starship yazi
 
 # Install LazyVim
 git clone https://github.com/LazyVim/starter $env:LOCALAPPDATA\nvim
