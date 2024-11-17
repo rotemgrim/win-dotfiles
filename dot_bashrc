@@ -1,0 +1,3 @@
+# aliases
+alias ll='eza -lh'
+alias la='eza -la'
