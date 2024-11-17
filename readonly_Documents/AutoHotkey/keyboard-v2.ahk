@@ -57,6 +57,8 @@ onkeydownDot(ihDot, vk, sc) {
       Case "33": tryActivate("s CabinetWClass ahk_exe explorer.exe")  ; 'F' key
       Case "48": Send("^b")                          ; 'B' key
       Case "30": Send("^+a")                         ; 'A' key
+      Case "31": Send("^+n")                         ; 'n' key
+
   }
 }
 
@@ -66,26 +68,51 @@ ihX.KeyOpt("{All}", "+N") ; Enable notification for all keys
 ihX.OnKeyDown := onkeydownX
 SC02D::{ ; listen for period key "."
     global pressedX := A_TickCount
+    global InChrome := false
+    global InWindowsTerminal := false
     ihX.Start()
+    if (winactive("ahk_exe chrome.exe")) {
+      InChrome := true
+    }
+    if (winactive("ahk_exe windowsTerminal.exe")) {
+      InWindowsTerminal := true
+    }
     KeyWait(A_ThisHotkey)
 }
 SC02D Up::{
     ihX.Stop()
-    if (ihX.Input = "" and A_TickCount - pressedX < 120)
+    if (ihX.Input = "" and A_TickCount - pressedX < 120) {
         Send("{SC02D}")
+    }
+    else if (!InChrome and !InWindowsTerminal) {
+      Send("{SC02D}")
+    }
 }
 onkeydownX(ihX, vk, sc) {
-  if (winactive("ahk_exe chrome.exe")) {
+  if (InChrome) {
     Switch sc {
       Case "35": checkdevtools("off") ; 'h' key
       Case "38": checkdevtools("on")  ; 'l' key
     }
   }
-  Switch sc {
-    Case "20": tryActivate("WindowsTerminal.exe")  ; 'T' key
-    Case "32": tryActivate("phpstorm64.exe")       ; 'D' key
+  else if (InWindowsTerminal) {
+    ; msgbox(sc)
+    Switch sc {
+      Case "49": Send("^+t")    ; 'N' key for  'ctrl + shift + t' for new tab in WindowsTerminal
+      Case "14": Send("^+w")    ; 'Backspace' key for 'ctrl + shift + w' for close tab in WindowsTerminal
+      Case "43": Send("!+d")      ; 'backslash' key for 'alt + shift + d' for split pane in WindowsTerminal
+      
+      ; movements between panes
+      Case "38": Send("!{Right}")   ; 'l' key for 'alt + right' for moving to right pane in WindowsTerminal
+      Case "35": Send("!{Left}")    ; 'h' key for 'alt + left' for moving to left pane in WindowsTerminal
+      Case "37": Send("!{Up}")      ; 'k' key for 'alt + up' for moving to up pane in WindowsTerminal
+      Case "36": Send("!{Down}")    ; 'j' key for 'alt + down' for moving to down pane in WindowsTerminal
+
+      ; movements between tabs
+      Case "24": Send("^{Tab}")     ; 't' key for 'ctrl + tab' for moving to next tab in WindowsTerminal
+      Case "23": Send("^+{Tab}")    ; 'T' key for 'ctrl + shift + tab' for moving to previous tab in Windows
+    }
   }
-  
 }
 
 $escape::{
