@@ -4,4 +4,8 @@ show_hidden = true
 ratio = [1, 4, 3]
 
 
+[opener]
+edit = [
+  { run = "nvim %*", block = true, desc = "Open with Neovim", for = "windows" },
+]
 
