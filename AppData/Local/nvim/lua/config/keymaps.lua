@@ -23,3 +23,7 @@ map("i", "jf", "<esc>", { noremap = true })
 map("i", "fj", "<esc>", { noremap = true })
 map("i", "jj", "<esc>", { noremap = true })
 map("i", "ff", "<esc>", { noremap = true })
+
+-- remap go back and go forward to H and L
+map("n", "H", "<c-o>", { noremap = true })
+map("n", "L", "<c-i>", { noremap = true })
