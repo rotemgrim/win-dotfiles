@@ -30,9 +30,14 @@ winget install jesseduffield.lazygit
 
 winget install eza-community.eza starship yazi
 
-# Install LazyVim
-git clone https://github.com/LazyVim/starter $env:LOCALAPPDATA\nvim
-Remove-Item $env:LOCALAPPDATA\nvim\.git -Recurse -Force
+# Install LazyVim if it's not already installed
+if (-Not (Test-Path $env:LOCALAPPDATA\nvim)) {
+    git clone https://github.com/LazyVim/starter $env:LOCALAPPDATA\nvim
+}
+# remove git folder if it exists
+if (Test-Path $env:LOCALAPPDATA\nvim\.git) {
+    Remove-Item $env:LOCALAPPDATA\nvim\.git -Recurse -Force
+}
 
 setx LANG en_US.UTF-8
 setx LC_ALL en_US.UTF-8
