@@ -39,6 +39,12 @@ if (Test-Path $env:LOCALAPPDATA\nvim\.git) {
     Remove-Item $env:LOCALAPPDATA\nvim\.git -Recurse -Force
 }
 
+# download zsh and extract 
+if (-Not (Test-Path $env:LOCALAPPDATA\zsh)) {
+    Invoke-WebRequest -Uri https://mirror.msys2.org/msys/x86_64/zsh-5.9-2-x86_64.pkg.tar.zst -OutFile $env:LOCALAPPDATA\zsh-5.9-2-x86_64.pkg.tar.zst
+    Expand-Archive -Path $env:LOCALAPPDATA\zsh-5.9-2-x86_64.pkg.tar.zst -DestinationPath $env:LOCALAPPDATA\zsh
+}
+
 setx LANG en_US.UTF-8
 setx LC_ALL en_US.UTF-8
 setx LC_CTYPE en_US.UTF-8
