@@ -22,8 +22,14 @@ if (-Not (Get-Command node -ErrorAction SilentlyContinue)) {
 # Install dependencies using Chocolatey
 choco install fd luarocks mingw ripgrep -y
 
+# delete all neovim cache if exists
+if (Test-Path "$env:LOCALAPPDATA\nvim-data\") {
+    Remove-Item -Path "$env:LOCALAPPDATA\nvim-data\" -Recurse -Force
+}
+
 # Install Neovim using Winget
 winget install Neovim.Neovim
+winget install fzf
 
 # Install Lazygit using Winget
 winget install jesseduffield.lazygit
@@ -40,10 +46,10 @@ if (Test-Path $env:LOCALAPPDATA\nvim\.git) {
 }
 
 # download zsh and extract 
-if (-Not (Test-Path $env:LOCALAPPDATA\zsh)) {
-    Invoke-WebRequest -Uri https://mirror.msys2.org/msys/x86_64/zsh-5.9-2-x86_64.pkg.tar.zst -OutFile $env:LOCALAPPDATA\zsh-5.9-2-x86_64.pkg.tar.zst
-    Expand-Archive -Path $env:LOCALAPPDATA\zsh-5.9-2-x86_64.pkg.tar.zst -DestinationPath $env:LOCALAPPDATA\zsh
-}
+#if (-Not (Test-Path $env:LOCALAPPDATA\zsh)) {
+#    Invoke-WebRequest -Uri https://mirror.msys2.org/msys/x86_64/zsh-5.9-2-x86_64.pkg.tar.zst -OutFile $env:LOCALAPPDATA\zsh-5.9-2-x86_64.pkg.tar.zst
+#    Expand-Archive -Path $env:LOCALAPPDATA\zsh-5.9-2-x86_64.pkg.tar.zst -DestinationPath $env:LOCALAPPDATA\zsh
+#}
 
 setx LANG en_US.UTF-8
 setx LC_ALL en_US.UTF-8
