@@ -29,12 +29,12 @@ if (Test-Path "$env:LOCALAPPDATA\nvim-data\") {
 
 # Install Neovim using Winget
 winget install Neovim.Neovim
-winget install fzf
+winget upgrade Neovim.Neovim
 
 # Install Lazygit using Winget
 winget install jesseduffield.lazygit
 
-winget install eza-community.eza starship yazi
+winget install eza-community.eza starship yazi fzf
 
 # Install LazyVim if it's not already installed
 if (-Not (Test-Path $env:LOCALAPPDATA\nvim)) {
