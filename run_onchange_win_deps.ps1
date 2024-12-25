@@ -36,6 +36,9 @@ winget install jesseduffield.lazygit
 
 winget install eza-community.eza starship yazi fzf
 
+# install Unpack Gzip, Zip & Tar Compressor
+winget install 9PGZFM3L3D9Q
+
 # Install LazyVim if it's not already installed
 if (-Not (Test-Path $env:LOCALAPPDATA\nvim)) {
     git clone https://github.com/LazyVim/starter $env:LOCALAPPDATA\nvim
