@@ -20,7 +20,7 @@ if (-Not (Get-Command node -ErrorAction SilentlyContinue)) {
 }
 
 # Install dependencies using Chocolatey
-choco install fd luarocks mingw ripgrep -y
+choco install fd luarocks mingw ripgrep delta -y
 
 # delete all neovim cache if exists
 if (Test-Path "$env:LOCALAPPDATA\nvim-data\") {
