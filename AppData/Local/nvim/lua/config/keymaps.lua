@@ -12,6 +12,8 @@ map("n", "<c-/>", "<cmd>normal gcc<cr>j", { desc = "Comment line" })
 map("n", "<c-_>", "<cmd>normal gcc<cr>j", { desc = "Comment line" })
 map("v", "<c-/>", "<cmd>normal gcc<cr>", { desc = "Comment Block" })
 map("v", "<c-_>", "<cmd>normal gcc<cr>", { desc = "Comment Block" })
+map("i", "<c-/>", "<cmd>normal gcc<cr>", { desc = "Comment Block" })
+map("i", "<c-_>", "<cmd>normal gcc<cr>", { desc = "Comment Block" })
 
 -- remap visual block mode to <C-q> (in windows <C-v> is used to paste)
 map("n", "<C-q>", "<C-v>", { noremap = true })
@@ -22,7 +24,7 @@ map("i", "kj", "<esc>", { noremap = true })
 map("i", "jf", "<esc>", { noremap = true })
 map("i", "fj", "<esc>", { noremap = true })
 map("i", "jj", "<esc>", { noremap = true })
-map("i", "ff", "<esc>", { noremap = true })
+-- map("i", "ff", "<esc>", { noremap = true })
 
 -- remap go back and go forward to H and L
 map("n", "H", "<c-o>", { noremap = true })
