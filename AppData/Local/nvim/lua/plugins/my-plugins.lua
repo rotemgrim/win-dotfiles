@@ -1,12 +1,5 @@
 return {
     {
-        "LazyVim/LazyVim",
-        opts = {
-            colorscheme = "catppuccin-mocha",
-        },
-    },
-
-    {
         "mg979/vim-visual-multi",
         branch = "master",
         config = function()
