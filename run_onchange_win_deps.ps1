@@ -22,6 +22,11 @@ if (-Not (Get-Command node -ErrorAction SilentlyContinue)) {
 # Install dependencies using Chocolatey
 choco install fd luarocks mingw ripgrep delta -y
 
+# install msys2 if not installed
+if (-Not (Test-Path "C:\msys64")) {
+    choco install msys2 --params "/InstallDir:C:\msys64" -y
+}
+
 # delete all neovim cache if exists
 if (Test-Path "$env:LOCALAPPDATA\nvim-data\") {
     Remove-Item -Path "$env:LOCALAPPDATA\nvim-data\" -Recurse -Force
@@ -34,7 +39,8 @@ winget upgrade Neovim.Neovim
 # Install Lazygit using Winget
 winget install jesseduffield.lazygit
 
-winget install eza-community.eza starship yazi fzf
+winget install eza-community.eza starship yazi fzf 
+# wezterm
 
 # install Unpack Gzip, Zip & Tar Compressor
 winget install 9PGZFM3L3D9Q
