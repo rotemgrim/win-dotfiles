@@ -81,11 +81,11 @@ SC02D::{ ; listen for period key "."
 }
 SC02D Up::{
     ihX.Stop()
-    if (ihX.Input = "" and A_TickCount - pressedX < 120) {
+    if (ihX.Input = "" and A_TickCount - pressedX < 200) {
         Send("{SC02D}")
     }
     else if (!InChrome and !InWindowsTerminal) {
-      Send("{SC02D}")
+    Send("{SC02D}")
     }
 }
 onkeydownX(ihX, vk, sc) {

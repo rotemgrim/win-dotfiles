@@ -29,3 +29,9 @@ map("i", "jj", "<esc>", { noremap = true })
 -- remap go back and go forward to H and L
 map("n", "H", "<c-o>", { noremap = true })
 map("n", "L", "<c-i>", { noremap = true })
+
+-- alt + h or l to move to previous or next buffer
+map("n", "<A-h>", "<cmd>bprevious<cr>", { desc = "Prev Buffer" })
+map("i", "<A-h>", "<cmd>bprevious<cr>", { desc = "Prev Buffer" })
+map("n", "<A-l>", "<cmd>bnext<cr>", { desc = "Next Buffer" })
+map("i", "<A-l>", "<cmd>bnext<cr>", { desc = "Next Buffer" })
