@@ -45,6 +45,7 @@ periodMenu := InitMenu([
     "v -> vscode",
     "z -> zoom",
     "b -> +[Terminal]",
+    "w -> +[Window]",
 ])
 SC034::{ ; listen for period key "."
     global pressedDot := A_TickCount
@@ -65,6 +66,9 @@ terminalMenu := InitMenu([
     "  s -> Split",
     "  v -> Split Vertical",
 ])
+windowMenu := InitMenu([
+    "d -> Close",
+])
 onkeydownDot(ihDot, vk, sc) {
     Switch sc {
       Case "20": tryActivate("WindowsTerminal.exe")  ; 'T' key
@@ -83,6 +87,15 @@ onkeydownDot(ihDot, vk, sc) {
         ihB.OnKeyDown := onkeydownB
         ihB.Start()
         ShowMenu(terminalMenu)
+        return
+
+      Case "17": ; 'W' For window
+        ihDot.Stop()
+        ihW := InputHook("I")
+        ihW.KeyOpt("{All}", "+N")
+        ihW.OnKeyDown := onkeydownW
+        ihW.Start()
+        ShowMenu(windowMenu)
         return
 
       Case "30": Send("^+a")                         ; 'A' key
@@ -110,6 +123,14 @@ onkeydownB(ihB, vk, sc) {
         Case "10": Send("^!0")
     }
     ihB.Stop()
+}
+
+onkeydownW(ihW, vk, sc) {
+    HideMenu(windowMenu)
+    Switch sc {
+        Case "32": Send("!{F4}") ; 'D' key for 'alt + f4'
+    }
+    ihw.Stop()
 }
 
 ihX := InputHook("I")
