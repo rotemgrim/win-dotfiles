@@ -8,6 +8,7 @@
 
 [safe]
 	directory = C:/Users/rotem/.local/share/chezmoi
+	directory = C:/Users/TV/AppData/Local/nvim-data/
 
 [interactive]
     diffFilter = delta --color-only

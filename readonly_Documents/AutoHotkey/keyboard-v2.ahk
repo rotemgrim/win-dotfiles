@@ -34,16 +34,37 @@ onkeydownCapsLock(ihCapsLock, vk, sc) {
 ihDot := InputHook("I")
 ihDot.KeyOpt("{All}", "+N") ; Enable notification for all keys
 ihDot.OnKeyDown := onkeydownDot
+periodMenu := InitMenu([
+    "c -> Chrome",
+    "d -> Develop"
+    "e -> Edge",
+    "f -> Explorer",
+    "g -> GoLand",
+    "s -> Slack",
+    "t -> Terminal",
+    "v -> vscode",
+    "z -> zoom",
+    "b -> +[Terminal]",
+])
 SC034::{ ; listen for period key "."
     global pressedDot := A_TickCount
     ihDot.Start()
+    ;ShowMenu(periodMenu)
     KeyWait(A_ThisHotkey)
 }
 SC034 Up::{
     ihDot.Stop()
+    HideMenu(periodMenu)
     if (ihDot.Input = "" and A_TickCount - pressedDot < 120)
         Send("{SC034}")
 }
+
+terminalMenu := InitMenu([
+    "1-8 -> Switch tab ",
+    "  t -> New tab ",
+    "  s -> Split",
+    "  v -> Split Vertical",
+])
 onkeydownDot(ihDot, vk, sc) {
     Switch sc {
       Case "20": tryActivate("WindowsTerminal.exe")  ; 'T' key
@@ -55,18 +76,46 @@ onkeydownDot(ihDot, vk, sc) {
       Case "47": tryActivate("code.exe")             ; 'V' key
       Case "44": tryActivate("Zoom.exe")             ; 'Z' key
       Case "33": tryActivate("s CabinetWClass ahk_exe explorer.exe")  ; 'F' key
-      Case "48": Send("^b")                          ; 'B' key
+      Case "48": ; 'B' key
+        ihDot.Stop()
+        ihB := InputHook("I")
+        ihB.KeyOpt("{All}", "+N")
+        ihB.OnKeyDown := onkeydownB
+        ihB.Start()
+        ShowMenu(terminalMenu)
+        return
+
       Case "30": Send("^+a")                         ; 'A' key
       Case "31": Send("^+n")                         ; 'n' key
 
   }
 }
 
+onkeydownB(ihB, vk, sc) {
+    ;msgbox(sc)
+    HideMenu(terminalMenu)
+    Switch sc {
+        Case "20": Send("^+t") ; 'T' key for 'ctrl + shift + t'        
+        Case "47": Send("!+{+}") ; 'v' for split vertical alt + shift + '+'
+        Case "31": Send("!+{-}") ; 's' for split horizontal alt + shift + '-'
+        Case "2": Send("^!1")
+        Case "3": Send("^!2")
+        Case "4": Send("^!3")
+        Case "5": Send("^!4")
+        Case "6": Send("^!5")
+        Case "6": Send("^!6")
+        Case "7": Send("^!7")
+        Case "8": Send("^!8")
+        Case "9": Send("^!9")
+        Case "10": Send("^!0")
+    }
+    ihB.Stop()
+}
 
 ihX := InputHook("I")
 ihX.KeyOpt("{All}", "+N") ; Enable notification for all keys
 ihX.OnKeyDown := onkeydownX
-SC02D::{ ; listen for period key "."
+SC02D::{ ; listen for period key "x"
     global pressedX := A_TickCount
     global InChrome := false
     global InWindowsTerminal := false
@@ -109,23 +158,23 @@ onkeydownX(ihX, vk, sc) {
       Case "36": Send("!{Down}")    ; 'j' key for 'alt + down' for moving to down pane in WindowsTerminal
 
       ; movements between tabs
-      Case "24": Send("^{Tab}")     ; 't' key for 'ctrl + tab' for moving to next tab in WindowsTerminal
-      Case "23": Send("^+{Tab}")    ; 'T' key for 'ctrl + shift + tab' for moving to previous tab in Windows
+      ; Case "24": Send("^{Tab}")     ; 't' key for 'ctrl + tab' for moving to next tab in WindowsTerminal
+      ; Case "23": Send("^+{Tab}")    ; 'T' key for 'ctrl + shift + tab' for moving to previous tab in Windows
     }
   }
 }
 
-$escape::{
-    errorlevel := !keywait("escape", "t0.5")
-    if (errorlevel) {
-        soundbeep 440, 100
-        errorlevel := !keywait("escape")
-        postmessage(0x112, 0xf060, , , "a")
-    } else {
-        sendinput("{escape}")
-    }
-    return
-}
+;$escape::{
+;    errorlevel := !keywait("escape", "t0.5")
+;    if (errorlevel) {
+;        soundbeep 440, 100
+;        errorlevel := !keywait("escape")
+;        postmessage(0x112, 0xf060, , , "a")
+;    } else {
+;        sendinput("{escape}")
+;    }
+;    return
+;}
 
 #hotif
 
@@ -222,4 +271,47 @@ checkdevtools(state) {
     }
 
     return
+}
+
+InitMenu(textItems := ["Default Item"]) {
+    myMenu := Gui("+AlwaysOnTop -Caption +ToolWindow -SysMenu +E0x08000000")
+    myMenu.BackColor := "272727"  ; Dark background color
+    myMenu.SetFont("s16 cWhite Bold", "consolas")
+
+    ; Add each text item from the array
+    for item in textItems {
+        ; split the item into key and text by the '->' string
+        splitItem := StrSplit(item, "->")
+        myMenu.AddText("cWhite  x32 y+16", splitItem[1])
+        myMenu.AddText("cRed    x+1", "->")
+        myMenu.AddText("cYellow x+1", splitItem[2])
+    }
+
+    ; Make the window semi-transparent
+    WinSetTransparent(180, myMenu)
+    return myMenu
+}
+
+ShowMenu(menu) {
+    ; Get screen dimensions
+    screenWidth := A_ScreenWidth
+    screenHeight := A_ScreenHeight
+    
+    ; Show the GUI to calculate its size
+    menu.Show("Hide")
+    menu.GetPos(&x, &y, &menuWidth, &menuHeight)
+    
+    ; Calculate position (bottom right with 20px margin)
+    xPos := screenWidth - menuWidth*2 - 200
+    yPos := screenHeight - menuHeight*2 - 250
+    
+    ; Show the menu at the calculated position
+    menu.Show("x" . xPos . " y" . yPos . " NoActivate")
+}
+
+HideMenu(menu) {
+    if IsSet(menu) && menu {
+        ;menu.Destroy()
+        menu.Hide()
+    }
 }
