@@ -8,5 +8,10 @@
 #   exec zsh
 # fi
 
-export PATH="/c/msys64/usr/bin:/c/msys64/mingw64/bin:$PATH"
-export HOME=/c/Users/TV
+#export PATH="/c/msys64/usr/bin:/c/msys64/mingw64/bin:$PATH"
+#export HOME="/c/Users/$USER"
+
+# if [ -t 1 ]; then
+#  exec fish
+# fi
+

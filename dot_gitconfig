@@ -2,7 +2,7 @@
 	name = rotem
 	email = rotemgrim@gmail.com
 [core]
-	autocrlf = input
+	autocrlf = false
 	eol = lf
     pager = delta
 
