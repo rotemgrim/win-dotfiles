@@ -112,7 +112,7 @@ onkeydownB(ihB, vk, sc) {
         Case "20": Send("^+t") ; 'T' key for 'ctrl + shift + t'        
         Case "47": Send("!+{+}") ; 'v' for split vertical alt + shift + '+'
         Case "31": Send("!+{-}") ; 's' for split horizontal alt + shift + '-'
-        Case "32": Send("^+w") ; 'd' for delete pane ctrl + shift + w
+        Case "32": Send("^+w") ; 'd' for delete pane ctrl + shift + w ; 
         Case "2": Send("^!1")
         Case "3": Send("^!2")
         Case "4": Send("^!3")
