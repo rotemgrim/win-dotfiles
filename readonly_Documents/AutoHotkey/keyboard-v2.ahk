@@ -38,8 +38,9 @@ periodMenu := InitMenu([
     "c -> Chrome",
     "d -> Develop"
     "e -> Edge",
-    "f -> Explorer",
+;    "f -> Explorer",
     "g -> GoLand",
+    "n -> Neovide",
     "s -> Slack",
     "t -> Terminal",
     "v -> vscode",
@@ -50,12 +51,12 @@ periodMenu := InitMenu([
 SC034::{ ; listen for period key "."
     global pressedDot := A_TickCount
     ihDot.Start()
-    ;ShowMenu(periodMenu)
+    ; ShowMenu(periodMenu)
     KeyWait(A_ThisHotkey)
 }
 SC034 Up::{
     ihDot.Stop()
-    HideMenu(periodMenu)
+    ; HideMenu(periodMenu)
     if (ihDot.Input = "" and A_TickCount - pressedDot < 120)
         Send("{SC034}")
 }
@@ -65,22 +66,22 @@ terminalMenu := InitMenu([
     "  t -> New tab ",
     "  s -> Split",
     "  v -> Split Vertical",
-    "  d -> Delete pane",
 ])
 windowMenu := InitMenu([
     "d -> Close",
 ])
 onkeydownDot(ihDot, vk, sc) {
     Switch sc {
-      Case "20": tryActivate("WindowsTerminal.exe")  ; 'T' key
-      Case "32": tryActivate("phpstorm64.exe")       ; 'D' key
-      Case "34": tryActivate("goland64.exe")         ; 'G' key
-      Case "31": tryActivate("slack.exe")            ; 'S' key
-      Case "46": tryActivate("chrome.exe")           ; 'C' key
-      Case "18": tryActivate("msedge.exe")           ; 'E' key
-      Case "47": tryActivate("code.exe")             ; 'V' key
-      Case "44": tryActivate("Zoom.exe")             ; 'Z' key
-      Case "33": tryActivate("s CabinetWClass ahk_exe explorer.exe")  ; 'F' key
+      Case "20": tryActivate(["WindowsTerminal.exe"])  ; 'T' key
+      Case "32": tryActivate(["phpstorm64.exe", "neovide.exe", "goland64.exe", "code.exe"])       ; 'D' key
+      Case "34": tryActivate(["goland64.exe"])         ; 'G' key
+      Case "49": tryActivate(["neovide.exe"])          ; 'N' key
+      Case "31": tryActivate(["slack.exe"])            ; 'S' key
+      Case "46": tryActivate(["chrome.exe"])           ; 'C' key
+      Case "18": tryActivate(["msedge.exe"])           ; 'E' key
+      Case "47": tryActivate(["code.exe"])             ; 'V' key
+      Case "44": tryActivate(["Zoom.exe"])             ; 'Z' key
+      ; Case "33": tryActivate(["s CabinetWClass ahk_exe explorer.exe"])  ; 'F' key
       Case "48": ; 'B' key
         ihDot.Stop()
         ihB := InputHook("I")
@@ -88,6 +89,15 @@ onkeydownDot(ihDot, vk, sc) {
         ihB.OnKeyDown := onkeydownB
         ihB.Start()
         ShowMenu(terminalMenu)
+        return
+
+      Case "33": ; 'F' key
+        ihDot.Stop()
+        ihF := InputHook("I")
+        ihF.KeyOpt("{All}", "+N")
+        ihF.OnKeyDown := onkeydownF
+        ihF.Start()
+        ShowMenu(periodMenu)
         return
 
       Case "17": ; 'W' For window
@@ -105,6 +115,12 @@ onkeydownDot(ihDot, vk, sc) {
   }
 }
 
+onkeydownF(ihF, vk, sc) {
+    HideMenu(periodMenu)
+    onkeydownDot(ihF, vk, sc)
+    ihF.Stop()
+}
+
 onkeydownB(ihB, vk, sc) {
     ;msgbox(sc)
     HideMenu(terminalMenu)
@@ -112,7 +128,6 @@ onkeydownB(ihB, vk, sc) {
         Case "20": Send("^+t") ; 'T' key for 'ctrl + shift + t'        
         Case "47": Send("!+{+}") ; 'v' for split vertical alt + shift + '+'
         Case "31": Send("!+{-}") ; 's' for split horizontal alt + shift + '-'
-        Case "32": Send("^+w") ; 'd' for delete pane ctrl + shift + w ; 
         Case "2": Send("^!1")
         Case "3": Send("^!2")
         Case "4": Send("^!3")
@@ -132,7 +147,7 @@ onkeydownW(ihW, vk, sc) {
     Switch sc {
         Case "32": Send("!{F4}") ; 'D' key for 'alt + f4'
     }
-    ihw.Stop()
+    ihW.Stop()
 }
 
 ihX := InputHook("I")
@@ -251,18 +266,22 @@ sendkeywithmodifiers(key) {
     return
 }
 
-tryactivate(search) {
-    if winexist("ahk_exe " . search) 
-        if winactive("ahk_exe " . search) {
-            groupname := strreplace("wingropup" . search, ".", "")
-            groupname := strreplace(groupname, " ", "")
-            groupadd(groupname, "ahk_exe " . search) ; add only internet explorer windows to this group.
-            groupactivate(groupname)
-        } else {
-            winactivate
-        }
-    else 
-        send("{lwin}")
+tryactivate(searchArray) {
+    for search in searchArray {
+        if winexist("ahk_exe " . search) {
+            if winactive("ahk_exe " . search) {
+                groupname := strreplace("wingropup" . search, ".", "")
+                groupname := strreplace(groupname, " ", "")
+                groupadd(groupname, "ahk_exe " . search) ; add only internet explorer windows to this group.
+                groupactivate(groupname)
+                return
+            } else {
+                winactivate
+                return
+            }
+        } 
+    }
+    send("{lwin}")
     return
 }
 
@@ -325,8 +344,8 @@ ShowMenu(menu) {
     menu.GetPos(&x, &y, &menuWidth, &menuHeight)
     
     ; Calculate position (bottom right with 20px margin)
-    xPos := screenWidth - menuWidth*2 - 200
-    yPos := screenHeight - menuHeight*2 - 250
+    xPos := screenWidth - menuWidth - 20
+    yPos := screenHeight - menuHeight - 150
     
     ; Show the menu at the calculated position
     menu.Show("x" . xPos . " y" . yPos . " NoActivate")
